@@ -1,7 +1,15 @@
-Hello this is my file
-and who are you please tell me
-about yourself
-and this is what a write
-in this file
-this file is stored on pc
-and my webserver is sending it to you.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+        <H1>
+            This is a heading H1
+        </H1>
+        <H2>
+            This is a heading H2
+        </H2>
+</body>
+</html>

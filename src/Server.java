@@ -9,28 +9,47 @@ public class Server
 {
     public static void main(String[] args)
     {
+        while(true)
+        {
+            handleRequest();
+        }
+
+    }
+
+    private static void handleRequest()
+    {
+        String response = "HTTP/1.1 200 OK\n" +
+                "Content-type: text/html\n" +
+                "Content-length: 10000\n" +
+                "\n";
         try
         {
-            String response = "HTTP/1.1 200 OK\n" +
-                              "Content-type: text/plain\n" +
-                              "Content-length: 10000\n" +
-                    "\n";
             ServerSocket serverSocket = new ServerSocket(9090);
             Socket clientSocket = serverSocket.accept();
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-            //BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            //DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-            String str;
-            System.out.println("Got a request");
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            BufferedReader file = new BufferedReader(new FileReader("myfile"));
+            HttpParser httpParser = new HttpParser(clientSocket.getInputStream());
+            httpParser.parseRequest();
+
+            ResourceHandler resourceHandler = new ResourceHandler(httpParser.getRequestURL());
+
             out.write(response);
-            while((str=file.readLine())!=null)
+            if(resourceHandler.isResourceValid())
             {
-                out.write(str+"\n");
+                BufferedReader fileInput = new BufferedReader(new InputStreamReader(resourceHandler.getInputStream()));
+                String str;
+
+                while((str=fileInput.readLine())!=null)
+                {
+                    out.write(str);
+                }
             }
             out.flush();
             out.close();
+            in.close();
+            clientSocket.close();
+            serverSocket.close();
         }
         catch(Exception e)
         {

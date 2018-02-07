@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
@@ -10,12 +11,11 @@ public class Temp
     {
         try
         {
-            byte[] arr = new byte[10000];
-            FileInputStream in = new FileInputStream("myfile");
-            in.read(arr);
-            String str = new String(arr,"UTF-8");
-            System.out.print(str+" and length of str is : "+str.length());
-
+            String mystr = "image/";
+            if(mystr.matches("(image/).*"))
+            {
+                System.out.println("True");
+            }
         }
         catch(Exception e)
         {
