@@ -4,34 +4,38 @@ import java.io.FileNotFoundException;
 
 /**
  * Created by Balraj on 03-Feb-18.
- * This class will manage all the file related activities.
+ * This class will manage all the fileHandle related activities.
  */
 public class ResourceHandler
 {
     private static String rootPath=System.getProperty("user.dir");
-    private File file;
+    private File fileHandle;
     private String requestURL;
     private String resourcePath;
     private String resourceType;
+    private long resourceSize;
     private boolean resourceValid;
 
     public ResourceHandler(String requestURL)
     {
         this.requestURL=requestURL;
         String path=rootPath+requestURL;
+
+        // if request URL only contains / then interpret it as a request for index.html
         if(requestURL.equals("/")) path=rootPath+"/index.html";
 
         resourceValid= new File(path).exists();
         setResourceProperties();
     }
 
-    public void setResourceProperties()
+    private void setResourceProperties()
     {
-        if(resourceValid)
+        if(resourceValid) // if resource exists then set the related properties. otherwise they will be null.
         {
             setResourcePath();
-            setFile();
+            setFileHandle();
             setResourceType();
+            setResourceSize();
         }
     }
 
@@ -43,9 +47,9 @@ public class ResourceHandler
 
     }
 
-    private void setFile()
+    private void setFileHandle()
     {
-        file=new File(resourcePath);
+        fileHandle =new File(resourcePath);
     }
 
     private void setResourceType()
@@ -61,17 +65,18 @@ public class ResourceHandler
                 resourceType="image/jpeg";
             }
         }
-        else
-        {
-            resourceType=null;
-        }
+    }
+
+    private void setResourceSize()
+    {
+        resourceSize= fileHandle.length();
     }
 
     public FileInputStream getInputStream()
     {
         try
         {
-            return new FileInputStream(file);
+            return new FileInputStream(fileHandle);
         }
         catch(FileNotFoundException e)
         {
@@ -95,5 +100,9 @@ public class ResourceHandler
         return resourcePath;
     }
 
+    public long getResourceSize()
+    {
+        return resourceSize;
+    }
 
 }

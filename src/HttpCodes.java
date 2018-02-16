@@ -50,4 +50,16 @@ public class HttpCodes
 
         return codes;
     }
+
+    public static String getReasonPhrase(int statusCode)
+    {
+        for(int i=0;i<codes.length;i++)
+        {
+            if(codes[i][0].equals(String.valueOf(statusCode)))
+            {
+                return codes[i][1];
+            }
+        }
+        return null;
+    }
 }
