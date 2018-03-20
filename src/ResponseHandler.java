@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.HashMap;
 
 /**
@@ -6,49 +7,89 @@ import java.util.HashMap;
  * some of this information is static while some other information must be generated dynamically.
  * type of data must be determined at run time.
  */
-public class ResponseHandler
+final class ResponseHandler
 {
-    private String version="http/1.1";
     private int statusCode;
     private String reasonPhrase;
     private String startLine;
     private HashMap<String,String> headers;
+    private Resource resource;
+    private BufferedOutputStream out;
+    private BufferedInputStream in;
 
-    private ResourceHandler resource;
 
-
-    public ResponseHandler(int statusCode,ResourceHandler resourceHandler)
+    ResponseHandler(Resource resource, OutputStream outputStream)
     {
-        this.statusCode = statusCode;
-        resource = resourceHandler;
+        this.resource = resource;
+        out = new BufferedOutputStream(outputStream);
+        in = new BufferedInputStream(resource.getInputStream());
+        setStatusCode();
         setReasonPhrase();
         setStartLine();
         setHeaders();
     }
-
+    private void setStatusCode(){
+        if(resource.isValid())
+        {
+            statusCode=200;
+        }
+        else
+        {
+            statusCode=404;
+        }
+    }
     private void setReasonPhrase()
     {
         reasonPhrase=HttpCodes.getReasonPhrase(statusCode);
     }
-
     private void setHeaders()
     {
-        headers=new HashMap<>();
-        headers.put("content-length",String.valueOf(resource.getResourceSize()));
-        headers.put("content-type",String.valueOf(resource.getResourceType()));
+        headers=new HashMap<String,String>();
+        headers.put("content-length",String.valueOf(resource.getSize()));
+        headers.put("content-type",String.valueOf(resource.getType()));
     }
     private void setStartLine()
     {
-        startLine=version+" "+ statusCode +" "+reasonPhrase;
+        startLine="http/1.1"+" "+ statusCode +" "+reasonPhrase+"\n";
     }
 
-    public String getStartLine()
+    private String getStartLine()
     {
         return startLine;
     }
-
-    public HashMap<String,String> getHeaders()
+    private String getHeaders()
     {
-        return headers;
+        StringBuilder line = new StringBuilder();
+        for(String key: headers.keySet())
+        {
+           String temp = key+":"+headers.get(key)+"\n";
+           line.append(temp);
+        }
+        line.append("\n");
+        return line.toString();
+    }
+
+    private void writeStartLine() throws IOException
+    {
+        out.write(getStartLine().getBytes());
+    }
+    private void writeHeaders() throws IOException
+    {
+        out.write(getHeaders().getBytes());
+    }
+    private void writeBody() throws IOException
+    {
+        byte[] arr = new byte[(int)resource.getSize()];
+        in.read(arr);
+        out.write(arr);
+    }
+
+    void writeResponse() throws IOException
+    {
+        writeStartLine();
+        writeHeaders();
+        writeBody();
+        in.close();
+        out.close();
     }
 }

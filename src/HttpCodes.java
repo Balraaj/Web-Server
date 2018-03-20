@@ -1,7 +1,7 @@
 /**
  * Created by Balraj on 04-Feb-18.
  */
-public class HttpCodes
+final class HttpCodes
 {
     private static String[][] codes = {{"100", "Continue"},
             {"101", "Switching Protocols"},
@@ -45,13 +45,13 @@ public class HttpCodes
             {"504", "Gateway Timeout"},
             {"505", "HTTP Version Not Supported"}};
 
-    public static String[][] getCodes()
+    static String[][] getCodes()
     {
 
         return codes;
     }
 
-    public static String getReasonPhrase(int statusCode)
+    static String getReasonPhrase(int statusCode)
     {
         for(int i=0;i<codes.length;i++)
         {
