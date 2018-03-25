@@ -47,8 +47,7 @@ final class HttpCodes
 
     static String[][] getCodes()
     {
-
-        return codes;
+    	return codes;
     }
 
     static String getReasonPhrase(int statusCode)
