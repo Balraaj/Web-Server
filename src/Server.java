@@ -13,8 +13,21 @@ public class Server
     private static int flag=0;
     public static void main(String[] args) throws IOException
     {
+        int threadLimit=100;
+        int temp=0;
+        if(args.length>1)
+        {
+            temp=Integer.parseInt(args[1]);
+        }
+        if((temp>0)&&(temp<500))
+        {
+            threadLimit=temp;
+        }
+
+        State.threadLimit=threadLimit;
         ServerSocket serverSocket = new ServerSocket(9090);
-        ExecutorService pool = Executors.newFixedThreadPool(200);
+        ExecutorService pool = Executors.newFixedThreadPool(threadLimit);
+        pool.execute(new UI());
 
         while(true)
         {
