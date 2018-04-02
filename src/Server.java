@@ -15,16 +15,17 @@ public class Server
     {
         int threadLimit=100;
         int temp=0;
-        if(args.length>1)
+        if(args.length>=1)
         {
-            temp=Integer.parseInt(args[1]);
+            temp=Integer.parseInt(args[0]);
         }
-        if((temp>0)&&(temp<500))
+        if((temp>0)&&(temp<100))
         {
             threadLimit=temp;
         }
 
         State.threadLimit=threadLimit;
+        State.port=9090;
         ServerSocket serverSocket = new ServerSocket(9090);
         ExecutorService pool = Executors.newFixedThreadPool(threadLimit);
         pool.execute(new UI());

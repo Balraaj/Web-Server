@@ -10,7 +10,7 @@ public class UI implements Runnable
     {
         Scanner in;
 
-        System.out.println("Multi-threaded Web Server. Please see the documentation for available commands");
+        System.out.println("Multi-threaded Web Server is running on port "+State.port+". Use help for any other information");
         while(true)
         {
             in = new Scanner(System.in);
@@ -20,9 +20,26 @@ public class UI implements Runnable
             {
                 System.out.println(State.threadLimit);
             }
-            if(command.equals("exit"))
+            else if(command.equals("rp"))
+            {
+                System.out.println(ResourceHandler.rootPath);
+            }
+            else if(command.equals("port"))
+            {
+                System.out.println(State.port);
+            }
+            else if(command.equals("stop"))
             {
                 System.exit(0);
+            }
+            else if(command.equals("help"))
+            {
+                System.out.println("1. tc - (thread count) shows the size of thread pool\n2. rp -he (root path) shows the currently set root path" +
+                        "\n3. port - shows the port number on which server is listening\n4. stop - stops the server");
+            }
+            else
+            {
+                System.out.println(command+" is not a valid command");
             }
         }
 

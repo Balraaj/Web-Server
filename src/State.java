@@ -3,5 +3,6 @@
  */
 public class State
 {
-    public static int threadLimit;
+    static int port;
+    static int threadLimit;
 }

@@ -10,7 +10,7 @@ import java.nio.file.Paths;
  */
 final class ResourceHandler
 {
-    private static String rootPath=System.getProperty("user.dir");
+    public static String rootPath=System.getProperty("user.dir")+"/Website";
     private Resource resource;
     private String requestURL;
 
