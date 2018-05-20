@@ -26,9 +26,10 @@ public class Server
 
         State.threadLimit=threadLimit;
         State.port=9090;
+        State.setSystemConfigured();
         ServerSocket serverSocket = new ServerSocket(9090);
         ExecutorService pool = Executors.newFixedThreadPool(threadLimit);
-        pool.execute(new UI());
+        new Thread(new UI()).start();
 
         while(true)
         {

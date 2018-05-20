@@ -93,12 +93,18 @@ public class HttpParser
         }
         else if (version[0] == 1 && version[1] >= 1)
         {
-            if (cmd[0].equals("OPTIONS") ||
-                    cmd[0].equals("POST")||
-                    cmd[0].equals("PUT") ||
-                    cmd[0].equals("DELETE") ||
-                    cmd[0].equals("TRACE") ||
-                    cmd[0].equals("CONNECT")) {
+            if (cmd[0].equals("OPTIONS") )
+            {
+                method="OPTIONS";
+                returnCode=400;
+            }
+        }
+        else if (version[0] == 1 && version[1] >= 1)
+        {
+            if (cmd[0].equals("POST")|| cmd[0].equals("PUT") ||
+                    cmd[0].equals("DELETE") || cmd[0].equals("TRACE") ||
+                    cmd[0].equals("CONNECT"))
+            {
                 returnCode = 501; // not implemented
             }
         }

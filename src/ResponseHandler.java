@@ -28,6 +28,14 @@ final class ResponseHandler
         setStartLine();
         setHeaders();
     }
+
+    ResponseHandler(OutputStream outputStream)
+    {
+        out=new BufferedOutputStream(outputStream);
+        statusCode=200;
+        setReasonPhrase();
+        setStartLine();
+    }
     private void setStatusCode(){
         if(resource.isValid())
         {
@@ -84,12 +92,28 @@ final class ResponseHandler
         out.write(arr);
     }
 
-    void writeResponse() throws IOException
+    void writeGetResponse() throws IOException
     {
         writeStartLine();
         writeHeaders();
         writeBody();
         in.close();
+        out.close();
+    }
+
+    void writeHeadResponse() throws IOException
+    {
+        writeStartLine();
+        writeHeaders();
+        in.close();
+        out.close();
+    }
+
+    void writeOptionsResponse() throws IOException
+    {
+        String response = "Allow: GET,HEAD,OPTIONS\n\n";
+        writeStartLine();
+        out.write(response.getBytes());
         out.close();
     }
 }

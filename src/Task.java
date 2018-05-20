@@ -23,11 +23,28 @@ public class Task implements Runnable
         {
             HttpParser httpParser = new HttpParser(clientSocket.getInputStream());
             httpParser.parseRequest();
-            ResourceHandler resourceHandler = new ResourceHandler(httpParser.getRequestURL());
-            ResponseHandler responseHandler = new ResponseHandler(resourceHandler.getResource(),clientSocket.getOutputStream());
+            if(httpParser.getMethod().equals("GET"))
+            {
+                ResourceHandler resourceHandler = new ResourceHandler(httpParser.getRequestURL());
+                ResponseHandler responseHandler = new ResponseHandler(resourceHandler.getResource(),clientSocket.getOutputStream());
 
-            responseHandler.writeResponse();
-            clientSocket.close();
+                responseHandler.writeGetResponse();
+                clientSocket.close();
+            }
+            else if(httpParser.getMethod().equals("HEAD"))
+            {
+                ResourceHandler resourceHandler = new ResourceHandler(httpParser.getRequestURL());
+                ResponseHandler responseHandler = new ResponseHandler(resourceHandler.getResource(),clientSocket.getOutputStream());
+
+                responseHandler.writeHeadResponse();
+                clientSocket.close();
+            }
+            else if(httpParser.getMethod().equals("OPTIONS"))
+            {
+                ResponseHandler responseHandler = new ResponseHandler(clientSocket.getOutputStream());
+                responseHandler.writeOptionsResponse();
+                clientSocket.close();
+            }
         }
         catch(IOException e)
         {

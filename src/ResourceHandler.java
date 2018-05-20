@@ -17,17 +17,30 @@ final class ResourceHandler
     ResourceHandler(String receivedURL) throws IOException
     {
         requestURL=rootPath+receivedURL;
-        if(receivedURL.equals("/"))
+        if(State.systemConfigured)
         {
-            requestURL=rootPath+"/index.html";
-        }
+            if(receivedURL.equals("/"))
+            {
+                requestURL = rootPath + "/index.html";
+            }
 
-        resource = new Resource();
-        resource.setValid(isResourceValid());
-        resource.setInputStream(new FileInputStream(requestURL));
-        resource.setSize(new File(requestURL).length());
-        resource.setPath(requestURL);
-        resource.setType(Files.probeContentType(Paths.get(requestURL)));
+            resource = new Resource();
+            resource.setValid(isResourceValid());
+            resource.setInputStream(new FileInputStream(requestURL));
+            resource.setSize(new File(requestURL).length());
+            resource.setPath(requestURL);
+            resource.setType(Files.probeContentType(Paths.get(requestURL)));
+        }
+        else
+        {
+            String url = System.getProperty("user.dir")+"/index.html";
+            resource = new Resource();
+            resource.setValid(true);
+            resource.setInputStream(new FileInputStream(url));
+            resource.setSize(new File(url).length());
+            resource.setPath(url);
+            resource.setType(Files.probeContentType(Paths.get(url)));
+        }
 
     }
     private boolean isResourceValid()
